@@ -1,13 +1,13 @@
 [*]
 [*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Wed Jan 29 14:57:04 2025
+[*] Wed Jan 29 21:09:32 2025
 [*]
 [dumpfile] "C:\Users\Posimsetty\Desktop\high-speed-ieee754-floating-point-arithmetic-unit-fpga\sim\work\result.ghw"
-[dumpfile_mtime] "Wed Jan 29 14:54:49 2025"
-[dumpfile_size] 21005949
+[dumpfile_mtime] "Wed Jan 29 21:09:07 2025"
+[dumpfile_size] 21007441
 [savefile] "C:\Users\Posimsetty\Desktop\high-speed-ieee754-floating-point-arithmetic-unit-fpga\sim\work\result.gtkw"
 [timestart] 0
-[size] 2560 1369
+[size] 1540 941
 [pos] -1 -1
 *-28.489813 1194000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
@@ -55,11 +55,20 @@ top.tb.fu_adder.eq_mag_opp_sign_stage3
 #{top.tb.fu_adder.small_significand[55:0]} top.tb.fu_adder.small_significand[55] top.tb.fu_adder.small_significand[54] top.tb.fu_adder.small_significand[53] top.tb.fu_adder.small_significand[52] top.tb.fu_adder.small_significand[51] top.tb.fu_adder.small_significand[50] top.tb.fu_adder.small_significand[49] top.tb.fu_adder.small_significand[48] top.tb.fu_adder.small_significand[47] top.tb.fu_adder.small_significand[46] top.tb.fu_adder.small_significand[45] top.tb.fu_adder.small_significand[44] top.tb.fu_adder.small_significand[43] top.tb.fu_adder.small_significand[42] top.tb.fu_adder.small_significand[41] top.tb.fu_adder.small_significand[40] top.tb.fu_adder.small_significand[39] top.tb.fu_adder.small_significand[38] top.tb.fu_adder.small_significand[37] top.tb.fu_adder.small_significand[36] top.tb.fu_adder.small_significand[35] top.tb.fu_adder.small_significand[34] top.tb.fu_adder.small_significand[33] top.tb.fu_adder.small_significand[32] top.tb.fu_adder.small_significand[31] top.tb.fu_adder.small_significand[30] top.tb.fu_adder.small_significand[29] top.tb.fu_adder.small_significand[28] top.tb.fu_adder.small_significand[27] top.tb.fu_adder.small_significand[26] top.tb.fu_adder.small_significand[25] top.tb.fu_adder.small_significand[24] top.tb.fu_adder.small_significand[23] top.tb.fu_adder.small_significand[22] top.tb.fu_adder.small_significand[21] top.tb.fu_adder.small_significand[20] top.tb.fu_adder.small_significand[19] top.tb.fu_adder.small_significand[18] top.tb.fu_adder.small_significand[17] top.tb.fu_adder.small_significand[16] top.tb.fu_adder.small_significand[15] top.tb.fu_adder.small_significand[14] top.tb.fu_adder.small_significand[13] top.tb.fu_adder.small_significand[12] top.tb.fu_adder.small_significand[11] top.tb.fu_adder.small_significand[10] top.tb.fu_adder.small_significand[9] top.tb.fu_adder.small_significand[8] top.tb.fu_adder.small_significand[7] top.tb.fu_adder.small_significand[6] top.tb.fu_adder.small_significand[5] top.tb.fu_adder.small_significand[4] top.tb.fu_adder.small_significand[3] top.tb.fu_adder.small_significand[2] top.tb.fu_adder.small_significand[1] top.tb.fu_adder.small_significand[0]
 @28
 top.tb.fu_adder.operation
-top.tb.fu_adder.result_sign
 @22
-#{top.tb.fu_adder.result_exponent[10:0]} top.tb.fu_adder.result_exponent[10] top.tb.fu_adder.result_exponent[9] top.tb.fu_adder.result_exponent[8] top.tb.fu_adder.result_exponent[7] top.tb.fu_adder.result_exponent[6] top.tb.fu_adder.result_exponent[5] top.tb.fu_adder.result_exponent[4] top.tb.fu_adder.result_exponent[3] top.tb.fu_adder.result_exponent[2] top.tb.fu_adder.result_exponent[1] top.tb.fu_adder.result_exponent[0]
-@201
+#{top.tb.fu_adder.result_exponent_stage3[10:0]} top.tb.fu_adder.result_exponent_stage3[10] top.tb.fu_adder.result_exponent_stage3[9] top.tb.fu_adder.result_exponent_stage3[8] top.tb.fu_adder.result_exponent_stage3[7] top.tb.fu_adder.result_exponent_stage3[6] top.tb.fu_adder.result_exponent_stage3[5] top.tb.fu_adder.result_exponent_stage3[4] top.tb.fu_adder.result_exponent_stage3[3] top.tb.fu_adder.result_exponent_stage3[2] top.tb.fu_adder.result_exponent_stage3[1] top.tb.fu_adder.result_exponent_stage3[0]
+@200
 -STAGE 4
+@22
+#{top.tb.fu_adder.sum[55:0]} top.tb.fu_adder.sum[55] top.tb.fu_adder.sum[54] top.tb.fu_adder.sum[53] top.tb.fu_adder.sum[52] top.tb.fu_adder.sum[51] top.tb.fu_adder.sum[50] top.tb.fu_adder.sum[49] top.tb.fu_adder.sum[48] top.tb.fu_adder.sum[47] top.tb.fu_adder.sum[46] top.tb.fu_adder.sum[45] top.tb.fu_adder.sum[44] top.tb.fu_adder.sum[43] top.tb.fu_adder.sum[42] top.tb.fu_adder.sum[41] top.tb.fu_adder.sum[40] top.tb.fu_adder.sum[39] top.tb.fu_adder.sum[38] top.tb.fu_adder.sum[37] top.tb.fu_adder.sum[36] top.tb.fu_adder.sum[35] top.tb.fu_adder.sum[34] top.tb.fu_adder.sum[33] top.tb.fu_adder.sum[32] top.tb.fu_adder.sum[31] top.tb.fu_adder.sum[30] top.tb.fu_adder.sum[29] top.tb.fu_adder.sum[28] top.tb.fu_adder.sum[27] top.tb.fu_adder.sum[26] top.tb.fu_adder.sum[25] top.tb.fu_adder.sum[24] top.tb.fu_adder.sum[23] top.tb.fu_adder.sum[22] top.tb.fu_adder.sum[21] top.tb.fu_adder.sum[20] top.tb.fu_adder.sum[19] top.tb.fu_adder.sum[18] top.tb.fu_adder.sum[17] top.tb.fu_adder.sum[16] top.tb.fu_adder.sum[15] top.tb.fu_adder.sum[14] top.tb.fu_adder.sum[13] top.tb.fu_adder.sum[12] top.tb.fu_adder.sum[11] top.tb.fu_adder.sum[10] top.tb.fu_adder.sum[9] top.tb.fu_adder.sum[8] top.tb.fu_adder.sum[7] top.tb.fu_adder.sum[6] top.tb.fu_adder.sum[5] top.tb.fu_adder.sum[4] top.tb.fu_adder.sum[3] top.tb.fu_adder.sum[2] top.tb.fu_adder.sum[1] top.tb.fu_adder.sum[0]
+@28
+top.tb.fu_adder.carry
+@22
+#{top.tb.fu_adder.result_exponent_stage4[10:0]} top.tb.fu_adder.result_exponent_stage4[10] top.tb.fu_adder.result_exponent_stage4[9] top.tb.fu_adder.result_exponent_stage4[8] top.tb.fu_adder.result_exponent_stage4[7] top.tb.fu_adder.result_exponent_stage4[6] top.tb.fu_adder.result_exponent_stage4[5] top.tb.fu_adder.result_exponent_stage4[4] top.tb.fu_adder.result_exponent_stage4[3] top.tb.fu_adder.result_exponent_stage4[2] top.tb.fu_adder.result_exponent_stage4[1] top.tb.fu_adder.result_exponent_stage4[0]
+@28
+top.tb.fu_adder.result_sign_stage4
+@201
+-STAGE 5
 @22
 #{top.tb.result[63:0]} top.tb.result[63] top.tb.result[62] top.tb.result[61] top.tb.result[60] top.tb.result[59] top.tb.result[58] top.tb.result[57] top.tb.result[56] top.tb.result[55] top.tb.result[54] top.tb.result[53] top.tb.result[52] top.tb.result[51] top.tb.result[50] top.tb.result[49] top.tb.result[48] top.tb.result[47] top.tb.result[46] top.tb.result[45] top.tb.result[44] top.tb.result[43] top.tb.result[42] top.tb.result[41] top.tb.result[40] top.tb.result[39] top.tb.result[38] top.tb.result[37] top.tb.result[36] top.tb.result[35] top.tb.result[34] top.tb.result[33] top.tb.result[32] top.tb.result[31] top.tb.result[30] top.tb.result[29] top.tb.result[28] top.tb.result[27] top.tb.result[26] top.tb.result[25] top.tb.result[24] top.tb.result[23] top.tb.result[22] top.tb.result[21] top.tb.result[20] top.tb.result[19] top.tb.result[18] top.tb.result[17] top.tb.result[16] top.tb.result[15] top.tb.result[14] top.tb.result[13] top.tb.result[12] top.tb.result[11] top.tb.result[10] top.tb.result[9] top.tb.result[8] top.tb.result[7] top.tb.result[6] top.tb.result[5] top.tb.result[4] top.tb.result[3] top.tb.result[2] top.tb.result[1] top.tb.result[0]
 [pattern_trace] 1
