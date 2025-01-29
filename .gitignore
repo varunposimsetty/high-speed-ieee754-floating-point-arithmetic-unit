@@ -1,0 +1,5 @@
+### compiled vhdl library
+*.cf
+
+### simulation outputs
+*.ghw
