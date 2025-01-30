@@ -31,6 +31,7 @@ architecture RTL of fp_adder is
     signal exponent_diff : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
     signal eq_mag_same_sign_stage2 : std_ulogic := '0';
     signal eq_mag_opp_sign_stage2 : std_ulogic := '0';
+    signal eq_mag_same_sign_operand_stage2 : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
     -- stage 3 signals
     signal guard_bit : std_ulogic := '0';
     signal round_bit : std_ulogic := '0';
@@ -42,12 +43,20 @@ architecture RTL of fp_adder is
     signal eq_mag_opp_sign_stage3 : std_ulogic := '0';
     signal operation : std_ulogic := '0';
     signal result_exponent_stage3 : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
+    signal eq_mag_same_sign_operand_stage3 : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
     -- stage 4 signals 
-    signal temp_sum : std_ulogic_vector(1+MANT_WIDTH+3-1 downto 0) := (others => '0');
+    signal temp_sum : std_ulogic_vector(1+MANT_WIDTH+3 downto 0) := (others => '0');
     signal sum : std_ulogic_vector(1+MANT_WIDTH+3-1 downto 0) := (others => '0');
     signal carry : std_ulogic := '0'; 
     signal result_exponent_stage4 : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
     signal result_sign_stage4 : std_ulogic := '0';
+    signal eq_mag_same_sign_stage4 : std_ulogic := '0';
+    signal eq_mag_opp_sign_stage4 : std_ulogic := '0';
+    signal eq_mag_same_sign_operand_stage4 : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
+    -- stage 5 signals 
+    signal result : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
+    signal result_mantissa : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others => '0');
+    signal result_exponent : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
     
     
 
@@ -81,7 +90,9 @@ architecture RTL of fp_adder is
                     exponent_diff <= (others => '0');
                     eq_mag_same_sign_stage2 <= '0';
                     eq_mag_opp_sign_stage2 <= '0';
+                    eq_mag_same_sign_operand_stage2 <= (others => '0');
                 elsif(rising_edge(i_clk_100MHz)) then 
+                    eq_mag_same_sign_operand_stage2 <= (others => '0');
                     eq_mag_same_sign_stage2 <= '0';
                     eq_mag_opp_sign_stage2 <= '0';
                     if (exponent_a > exponent_b) then 
@@ -99,6 +110,7 @@ architecture RTL of fp_adder is
                                 smaller_num <= i_operand_b;
                                 exponent_diff <= (others => '0');
                                 eq_mag_same_sign_stage2 <= '1';
+                                eq_mag_same_sign_operand_stage2 <= i_operand_a;
                             else 
                                 if (sign_a = '1') then 
                                     larger_num <= i_operand_b;
@@ -137,14 +149,24 @@ architecture RTL of fp_adder is
                     eq_mag_opp_sign_stage3 <= '0';
                     operation <= '0';
                     result_exponent_stage3 <= (others => '0');
+                    eq_mag_same_sign_operand_stage3 <= (others => '0');
                 elsif(rising_edge(i_clk_100MHz)) then 
+                    guard_bit <= '0';
+                    round_bit <= '0';
+                    sticky_bit <= '0';
                     eq_mag_same_sign_stage3 <= eq_mag_same_sign_stage2;
                     eq_mag_opp_sign_stage3 <= eq_mag_opp_sign_stage2;
+                    eq_mag_same_sign_operand_stage3 <= eq_mag_same_sign_operand_stage2;
                     large_significand <= '1' & larger_num(MANT_WIDTH-1 downto 0) & guard_bit & round_bit & sticky_bit;
                     small_significand <= '1' & smaller_num(MANT_WIDTH-1 downto 0) & guard_bit & round_bit & sticky_bit;
-                    ----------------------HAVE TO CHANGE THE SHIFT-------------------------------------------------------
+                    -- SMALL SIGNIFICAND SHIFT LOGIC 
+                    for i in 0 to (to_integer(unsigned(exponent_diff))-1) loop
+                        if (i+1 <= small_significand'high) then 
+                            sticky_bit <= sticky_bit or small_significand(i+1);
+                        end if;
+                    end loop;
                     small_significand <= std_ulogic_vector(unsigned('1' & smaller_num(MANT_WIDTH-1 downto 0) & guard_bit & round_bit & sticky_bit) srl to_integer(unsigned(exponent_diff))); -- HAVE TO CHANGE THIS 
-                    ------------------------------------------------------------------------------------------------------
+                    small_significand(0) <= sticky_bit;
                     operation <= larger_num(0) xor smaller_num(0);
                     result_exponent_stage3 <= larger_num(EXP_WIDTH+MANT_WIDTH-1 downto MANT_WIDTH);
                     result_sign_stage3 <= larger_num(0);
@@ -160,32 +182,22 @@ architecture RTL of fp_adder is
                     carry <= '0';
                     result_exponent_stage4 <= (others => '0');
                     result_sign_stage4 <= '0';
+                    eq_mag_same_sign_stage4 <= '0';
+                    eq_mag_opp_sign_stage4 <= '0';
+                    eq_mag_same_sign_operand_stage4 <= (others => '0');
                 elsif(rising_edge(i_clk_100MHz)) then
+                    eq_mag_same_sign_stage4 <= eq_mag_same_sign_stage3;
+                    eq_mag_opp_sign_stage4 <= eq_mag_opp_sign_stage3;
                     result_exponent_stage4 <= result_exponent_stage3;
                     result_sign_stage4 <= result_sign_stage3;
-                    ----- FIX THE LOGIC FOR ADDITION AND CAPTURING THE CARRY
+                    eq_mag_same_sign_operand_stage4 <= eq_mag_same_sign_operand_stage3;
                     if (operation = '0') then 
-                        temp_sum <= std_ulogic_vector(unsigned(large_significand)+unsigned(small_significand));
+                        temp_sum <= std_ulogic_vector(unsigned('0' & large_significand)+unsigned('0' & small_significand));
                     elsif (operation = '1') then 
-                        temp_sum <= std_ulogic_vector(unsigned(large_significand) - unsigned(small_significand)); -- Which is basically the sum of the large_significand and 2's complement of the small_significand
+                        temp_sum <= std_ulogic_vector(unsigned('0' & large_significand) - unsigned('0' & small_significand)); -- Which is basically the sum of the large_significand and 2's complement of the small_significand
                     end if;
-                    sum <= temp_sum(temp_sum'high downto 0);
+                    sum <= temp_sum(temp_sum'high-1 downto 0);
                     carry <= temp_sum(temp_sum'high);
                 end if;
         end process proc_significand;
-
-
-                    
-            
-                
-
-
-
-
-
-                    
-
-
-    
-
 end architecture RTL;

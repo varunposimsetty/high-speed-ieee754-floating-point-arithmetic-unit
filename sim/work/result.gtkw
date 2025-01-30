@@ -1,22 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Wed Jan 29 21:09:32 2025
+[*] Thu Jan 30 07:21:58 2025
 [*]
 [dumpfile] "C:\Users\Posimsetty\Desktop\high-speed-ieee754-floating-point-arithmetic-unit-fpga\sim\work\result.ghw"
-[dumpfile_mtime] "Wed Jan 29 21:09:07 2025"
-[dumpfile_size] 21007441
+[dumpfile_mtime] "Thu Jan 30 07:20:30 2025"
+[dumpfile_size] 21007467
 [savefile] "C:\Users\Posimsetty\Desktop\high-speed-ieee754-floating-point-arithmetic-unit-fpga\sim\work\result.gtkw"
 [timestart] 0
-[size] 1540 941
-[pos] -1 -1
-*-28.489813 1194000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 2560 1369
+[pos] -139 -139
+*-28.489813 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.tb.
 [treeopen] top.tb.fu_adder.
 [sst_width] 278
 [signals_width] 286
 [sst_expanded] 1
-[sst_vpaned_height] 425
+[sst_vpaned_height] 655
 @200
 -FP_ADDER
 -INPUTS
@@ -67,8 +67,11 @@ top.tb.fu_adder.carry
 #{top.tb.fu_adder.result_exponent_stage4[10:0]} top.tb.fu_adder.result_exponent_stage4[10] top.tb.fu_adder.result_exponent_stage4[9] top.tb.fu_adder.result_exponent_stage4[8] top.tb.fu_adder.result_exponent_stage4[7] top.tb.fu_adder.result_exponent_stage4[6] top.tb.fu_adder.result_exponent_stage4[5] top.tb.fu_adder.result_exponent_stage4[4] top.tb.fu_adder.result_exponent_stage4[3] top.tb.fu_adder.result_exponent_stage4[2] top.tb.fu_adder.result_exponent_stage4[1] top.tb.fu_adder.result_exponent_stage4[0]
 @28
 top.tb.fu_adder.result_sign_stage4
-@201
+@200
 -STAGE 5
+@28
+top.tb.fu_adder.eq_mag_same_sign_stage4
+top.tb.fu_adder.eq_mag_opp_sign_stage4
 @22
 #{top.tb.result[63:0]} top.tb.result[63] top.tb.result[62] top.tb.result[61] top.tb.result[60] top.tb.result[59] top.tb.result[58] top.tb.result[57] top.tb.result[56] top.tb.result[55] top.tb.result[54] top.tb.result[53] top.tb.result[52] top.tb.result[51] top.tb.result[50] top.tb.result[49] top.tb.result[48] top.tb.result[47] top.tb.result[46] top.tb.result[45] top.tb.result[44] top.tb.result[43] top.tb.result[42] top.tb.result[41] top.tb.result[40] top.tb.result[39] top.tb.result[38] top.tb.result[37] top.tb.result[36] top.tb.result[35] top.tb.result[34] top.tb.result[33] top.tb.result[32] top.tb.result[31] top.tb.result[30] top.tb.result[29] top.tb.result[28] top.tb.result[27] top.tb.result[26] top.tb.result[25] top.tb.result[24] top.tb.result[23] top.tb.result[22] top.tb.result[21] top.tb.result[20] top.tb.result[19] top.tb.result[18] top.tb.result[17] top.tb.result[16] top.tb.result[15] top.tb.result[14] top.tb.result[13] top.tb.result[12] top.tb.result[11] top.tb.result[10] top.tb.result[9] top.tb.result[8] top.tb.result[7] top.tb.result[6] top.tb.result[5] top.tb.result[4] top.tb.result[3] top.tb.result[2] top.tb.result[1] top.tb.result[0]
 [pattern_trace] 1
