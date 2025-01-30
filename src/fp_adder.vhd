@@ -200,4 +200,25 @@ architecture RTL of fp_adder is
                     carry <= temp_sum(temp_sum'high);
                 end if;
         end process proc_significand;
+        
+        -- Stage 5: Normalizer stage : The final result is determined using shifting and rounding
+        proc_normalizer : process(i_clk_100MHz,i_nrst_async) is
+            begin  
+                if (i_nrst_async = '0') then 
+                    result <= (others => '0');
+                    result_mantissa <= (others => '0');
+                    result_exponent <= (others => '0');
+                elsif(rising_edge(i_clk_100MHz)) then 
+                    if (eq_mag_opp_sign_stage4 = '1') then 
+                        result <= (others => '0');
+                    elsif(eq_mag_same_sign_stage4 = '1') then 
+                        result_mantissa <= std_ulogic_vector(eq_mag_same_sign_operand_stage4(MANT_WIDTH-2 downto 0) & '0');
+                        result_exponent <= std_ulogic_vector(unsigned(eq_mag_same_sign_operand_stage4(EXP_WIDTH+MANT_WIDTH-1 downto MANT_WIDTH)) + 1);
+                    end if;
+                    
+                end if;
+        end process proc_normalizer;
+        o_result <= result;
+                    
+
 end architecture RTL;

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Thu Jan 30 07:21:58 2025
+[*] Thu Jan 30 12:20:26 2025
 [*]
 [dumpfile] "C:\Users\Posimsetty\Desktop\high-speed-ieee754-floating-point-arithmetic-unit-fpga\sim\work\result.ghw"
-[dumpfile_mtime] "Thu Jan 30 07:20:30 2025"
-[dumpfile_size] 21007467
+[dumpfile_mtime] "Thu Jan 30 12:19:37 2025"
+[dumpfile_size] 21008782
 [savefile] "C:\Users\Posimsetty\Desktop\high-speed-ieee754-floating-point-arithmetic-unit-fpga\sim\work\result.gtkw"
 [timestart] 0
 [size] 2560 1369
-[pos] -139 -139
-*-28.489813 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -9 -9
+*-24.489813 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.tb.
 [treeopen] top.tb.fu_adder.
@@ -73,6 +73,11 @@ top.tb.fu_adder.result_sign_stage4
 top.tb.fu_adder.eq_mag_same_sign_stage4
 top.tb.fu_adder.eq_mag_opp_sign_stage4
 @22
+#{top.tb.fu_adder.result_mantissa[51:0]} top.tb.fu_adder.result_mantissa[51] top.tb.fu_adder.result_mantissa[50] top.tb.fu_adder.result_mantissa[49] top.tb.fu_adder.result_mantissa[48] top.tb.fu_adder.result_mantissa[47] top.tb.fu_adder.result_mantissa[46] top.tb.fu_adder.result_mantissa[45] top.tb.fu_adder.result_mantissa[44] top.tb.fu_adder.result_mantissa[43] top.tb.fu_adder.result_mantissa[42] top.tb.fu_adder.result_mantissa[41] top.tb.fu_adder.result_mantissa[40] top.tb.fu_adder.result_mantissa[39] top.tb.fu_adder.result_mantissa[38] top.tb.fu_adder.result_mantissa[37] top.tb.fu_adder.result_mantissa[36] top.tb.fu_adder.result_mantissa[35] top.tb.fu_adder.result_mantissa[34] top.tb.fu_adder.result_mantissa[33] top.tb.fu_adder.result_mantissa[32] top.tb.fu_adder.result_mantissa[31] top.tb.fu_adder.result_mantissa[30] top.tb.fu_adder.result_mantissa[29] top.tb.fu_adder.result_mantissa[28] top.tb.fu_adder.result_mantissa[27] top.tb.fu_adder.result_mantissa[26] top.tb.fu_adder.result_mantissa[25] top.tb.fu_adder.result_mantissa[24] top.tb.fu_adder.result_mantissa[23] top.tb.fu_adder.result_mantissa[22] top.tb.fu_adder.result_mantissa[21] top.tb.fu_adder.result_mantissa[20] top.tb.fu_adder.result_mantissa[19] top.tb.fu_adder.result_mantissa[18] top.tb.fu_adder.result_mantissa[17] top.tb.fu_adder.result_mantissa[16] top.tb.fu_adder.result_mantissa[15] top.tb.fu_adder.result_mantissa[14] top.tb.fu_adder.result_mantissa[13] top.tb.fu_adder.result_mantissa[12] top.tb.fu_adder.result_mantissa[11] top.tb.fu_adder.result_mantissa[10] top.tb.fu_adder.result_mantissa[9] top.tb.fu_adder.result_mantissa[8] top.tb.fu_adder.result_mantissa[7] top.tb.fu_adder.result_mantissa[6] top.tb.fu_adder.result_mantissa[5] top.tb.fu_adder.result_mantissa[4] top.tb.fu_adder.result_mantissa[3] top.tb.fu_adder.result_mantissa[2] top.tb.fu_adder.result_mantissa[1] top.tb.fu_adder.result_mantissa[0]
+@23
+#{top.tb.fu_adder.result_exponent[10:0]} top.tb.fu_adder.result_exponent[10] top.tb.fu_adder.result_exponent[9] top.tb.fu_adder.result_exponent[8] top.tb.fu_adder.result_exponent[7] top.tb.fu_adder.result_exponent[6] top.tb.fu_adder.result_exponent[5] top.tb.fu_adder.result_exponent[4] top.tb.fu_adder.result_exponent[3] top.tb.fu_adder.result_exponent[2] top.tb.fu_adder.result_exponent[1] top.tb.fu_adder.result_exponent[0]
+@22
+#{top.tb.fu_adder.result[63:0]} top.tb.fu_adder.result[63] top.tb.fu_adder.result[62] top.tb.fu_adder.result[61] top.tb.fu_adder.result[60] top.tb.fu_adder.result[59] top.tb.fu_adder.result[58] top.tb.fu_adder.result[57] top.tb.fu_adder.result[56] top.tb.fu_adder.result[55] top.tb.fu_adder.result[54] top.tb.fu_adder.result[53] top.tb.fu_adder.result[52] top.tb.fu_adder.result[51] top.tb.fu_adder.result[50] top.tb.fu_adder.result[49] top.tb.fu_adder.result[48] top.tb.fu_adder.result[47] top.tb.fu_adder.result[46] top.tb.fu_adder.result[45] top.tb.fu_adder.result[44] top.tb.fu_adder.result[43] top.tb.fu_adder.result[42] top.tb.fu_adder.result[41] top.tb.fu_adder.result[40] top.tb.fu_adder.result[39] top.tb.fu_adder.result[38] top.tb.fu_adder.result[37] top.tb.fu_adder.result[36] top.tb.fu_adder.result[35] top.tb.fu_adder.result[34] top.tb.fu_adder.result[33] top.tb.fu_adder.result[32] top.tb.fu_adder.result[31] top.tb.fu_adder.result[30] top.tb.fu_adder.result[29] top.tb.fu_adder.result[28] top.tb.fu_adder.result[27] top.tb.fu_adder.result[26] top.tb.fu_adder.result[25] top.tb.fu_adder.result[24] top.tb.fu_adder.result[23] top.tb.fu_adder.result[22] top.tb.fu_adder.result[21] top.tb.fu_adder.result[20] top.tb.fu_adder.result[19] top.tb.fu_adder.result[18] top.tb.fu_adder.result[17] top.tb.fu_adder.result[16] top.tb.fu_adder.result[15] top.tb.fu_adder.result[14] top.tb.fu_adder.result[13] top.tb.fu_adder.result[12] top.tb.fu_adder.result[11] top.tb.fu_adder.result[10] top.tb.fu_adder.result[9] top.tb.fu_adder.result[8] top.tb.fu_adder.result[7] top.tb.fu_adder.result[6] top.tb.fu_adder.result[5] top.tb.fu_adder.result[4] top.tb.fu_adder.result[3] top.tb.fu_adder.result[2] top.tb.fu_adder.result[1] top.tb.fu_adder.result[0]
 #{top.tb.result[63:0]} top.tb.result[63] top.tb.result[62] top.tb.result[61] top.tb.result[60] top.tb.result[59] top.tb.result[58] top.tb.result[57] top.tb.result[56] top.tb.result[55] top.tb.result[54] top.tb.result[53] top.tb.result[52] top.tb.result[51] top.tb.result[50] top.tb.result[49] top.tb.result[48] top.tb.result[47] top.tb.result[46] top.tb.result[45] top.tb.result[44] top.tb.result[43] top.tb.result[42] top.tb.result[41] top.tb.result[40] top.tb.result[39] top.tb.result[38] top.tb.result[37] top.tb.result[36] top.tb.result[35] top.tb.result[34] top.tb.result[33] top.tb.result[32] top.tb.result[31] top.tb.result[30] top.tb.result[29] top.tb.result[28] top.tb.result[27] top.tb.result[26] top.tb.result[25] top.tb.result[24] top.tb.result[23] top.tb.result[22] top.tb.result[21] top.tb.result[20] top.tb.result[19] top.tb.result[18] top.tb.result[17] top.tb.result[16] top.tb.result[15] top.tb.result[14] top.tb.result[13] top.tb.result[12] top.tb.result[11] top.tb.result[10] top.tb.result[9] top.tb.result[8] top.tb.result[7] top.tb.result[6] top.tb.result[5] top.tb.result[4] top.tb.result[3] top.tb.result[2] top.tb.result[1] top.tb.result[0]
 [pattern_trace] 1
 [pattern_trace] 0
