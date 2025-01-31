@@ -54,11 +54,17 @@ architecture RTL of fp_adder is
     signal eq_mag_opp_sign_stage4 : std_ulogic := '0';
     signal eq_mag_same_sign_operand_stage4 : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
     -- stage 5 signals 
+    signal zero : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
     signal result : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
     signal result_mantissa : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others => '0');
     signal result_exponent : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
-    
-    
+    -- guard bit round bit sticky bit and least significand bit in the mantissa used for the rounding decision
+    signal g : std_ulogic := '0';
+    signal b : std_ulogic := '0';
+    signal s : std_ulogic := '0';
+    signal l : std_ulogic := '0';
+    signal r : std_ulogic := '0'; -- roudning decision
+
 
     begin 
         -- Stage 1 : Fetch stage : fetch the sign,exponent and mantissa from the two operands
@@ -106,8 +112,6 @@ architecture RTL of fp_adder is
                             exponent_diff <= (others => '0');
                         elsif(mantissa_a = mantissa_b) then 
                             if (sign_a = sign_b) then
-                                larger_num <= i_operand_a;
-                                smaller_num <= i_operand_b;
                                 exponent_diff <= (others => '0');
                                 eq_mag_same_sign_stage2 <= '1';
                                 eq_mag_same_sign_operand_stage2 <= i_operand_a;
@@ -202,23 +206,77 @@ architecture RTL of fp_adder is
         end process proc_significand;
         
         -- Stage 5: Normalizer stage : The final result is determined using shifting and rounding
-        proc_normalizer : process(i_clk_100MHz,i_nrst_async) is
+        proc_normalizer : process(i_clk_100MHz, i_nrst_async)
+        variable temp_sum_var : std_ulogic_vector(1 + MANT_WIDTH + 3 - 1 downto 0);
+        variable temp_result_exponent_var : std_ulogic_vector(EXP_WIDTH - 1 downto 0);
             begin  
                 if (i_nrst_async = '0') then 
                     result <= (others => '0');
                     result_mantissa <= (others => '0');
                     result_exponent <= (others => '0');
-                elsif(rising_edge(i_clk_100MHz)) then 
+                    g <= '0';
+                    b <= '0';
+                    s <= '0';
+                    l <= '0';
+                    r <= '0';
+                elsif rising_edge(i_clk_100MHz) then 
+                    g <= '0';
+                    b <= '0';
+                    s <= '0';
+                    l <= '0';
+                    r <= '0';
                     if (eq_mag_opp_sign_stage4 = '1') then 
                         result <= (others => '0');
-                    elsif(eq_mag_same_sign_stage4 = '1') then 
-                        result_mantissa <= std_ulogic_vector(eq_mag_same_sign_operand_stage4(MANT_WIDTH-2 downto 0) & '0');
-                        result_exponent <= std_ulogic_vector(unsigned(eq_mag_same_sign_operand_stage4(EXP_WIDTH+MANT_WIDTH-1 downto MANT_WIDTH)) + 1);
+                    elsif eq_mag_same_sign_stage4 = '1' then
+                        if (eq_mag_same_sign_operand_stage4 = zero) then 
+                            result <= (others => '0');
+                        else 
+                            result_mantissa <= eq_mag_same_sign_operand_stage4(MANT_WIDTH-2 downto 0) & '0';
+                            result_exponent <= std_ulogic_vector(unsigned(eq_mag_same_sign_operand_stage4(EXP_WIDTH+MANT_WIDTH-1 downto MANT_WIDTH)) + 1);
+                            -- Normalize result_mantissa
+                            for j in 0 to result_mantissa'high loop
+                                if result_mantissa(result_mantissa'high) /= '1' then 
+                                    result_mantissa <= std_ulogic_vector(unsigned(result_mantissa) sll 1);
+                                    result_exponent <= std_ulogic_vector(unsigned(result_exponent) - 1);
+                                end if;
+                            end loop;
+                            result <= result_sign_stage4 & result_exponent & result_mantissa;
+                        end if;
+                    else 
+                        temp_sum_var := sum;
+                        temp_result_exponent_var := result_exponent_stage4;
+                        if carry = '1' then 
+                            temp_sum_var := std_ulogic_vector(unsigned(temp_sum_var) srl 1);
+                            temp_result_exponent_var := std_ulogic_vector(unsigned(temp_result_exponent_var) + 1);
+                        end if;
+                        -- Normalize temp_sum_var
+                        for j in 0 to temp_sum_var'high loop
+                            if temp_sum_var(temp_sum_var'high) /= '1' then 
+                                temp_sum_var := std_ulogic_vector(unsigned(temp_sum_var) sll 1);
+                                temp_result_exponent_var := std_ulogic_vector(unsigned(temp_result_exponent_var) - 1);
+                            end if;
+                        end loop;
+                        s <= temp_sum_var(0);
+                        b <= temp_sum_var(1);
+                        g <= temp_sum_var(2);
+                        l <= temp_sum_var(3);
+                        r <= g and (b or s or l);
+                        if r = '0' then 
+                            result_mantissa <= temp_sum_var(temp_sum_var'high-1 downto 3);
+                        else 
+                            temp_sum_var := std_ulogic_vector(unsigned(temp_sum_var) + 1);
+                            for k in 0 to temp_sum_var'high loop
+                                if temp_sum_var(temp_sum_var'high) /= '1' then 
+                                    temp_sum_var := std_ulogic_vector(unsigned(temp_sum_var) sll 1);
+                                    temp_result_exponent_var := std_ulogic_vector(unsigned(temp_result_exponent_var) - 1);
+                                end if;
+                            end loop;
+                            result_mantissa <= temp_sum_var(temp_sum_var'high-1 downto 3);
+                        end if;
+
+                        result <= result_sign_stage4 & temp_result_exponent_var & result_mantissa;
                     end if;
-                    
                 end if;
         end process proc_normalizer;
-        o_result <= result;
-                    
-
+            o_result <= result;
 end architecture RTL;
