@@ -1,19 +1,19 @@
 [*]
 [*] GTKWave Analyzer v3.3.118 (w)1999-2023 BSI
-[*] Fri Jan 31 13:20:28 2025
+[*] Sat Feb 01 09:02:18 2025
 [*]
 [dumpfile] "C:\Users\Posimsetty\Desktop\high-speed-ieee754-floating-point-arithmetic-unit-fpga\sim\work\result.ghw"
-[dumpfile_mtime] "Fri Jan 31 13:18:59 2025"
-[dumpfile_size] 21010505
+[dumpfile_mtime] "Fri Jan 31 22:19:28 2025"
+[dumpfile_size] 21020985
 [savefile] "C:\Users\Posimsetty\Desktop\high-speed-ieee754-floating-point-arithmetic-unit-fpga\sim\work\result.gtkw"
-[timestart] 0
-[size] 2560 1369
+[timestart] 93100000
+[size] 1540 941
 [pos] -1 -1
-*-27.489813 738800000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-26.489813 93100000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.tb.
 [treeopen] top.tb.fu_adder.
-[sst_width] 278
+[sst_width] 174
 [signals_width] 333
 [sst_expanded] 1
 [sst_vpaned_height] 655
