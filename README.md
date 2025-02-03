@@ -1,5 +1,5 @@
 # high-speed-ieee754-floating-point-arithmetic-unitfpga
-Implementation of a high speed IEEE-745 floating point arithematic unit on an FPGA
+Implementation of a high speed IEEE-745 floating point arithematic unit on an FPGA (Implementation in Progress)
 
 ## Floating Point Adder 
 - Floating point represents integers and fractions with a finite precision.
@@ -20,8 +20,4 @@ Implementation of a high speed IEEE-745 floating point arithematic unit on an FP
 - Stage 4 : Significand Addition : Based on the sign of the two numbers either addition or subtraction is perfromed. In case of subtraction its the addition of the larger significand with the 2's complement of the smaller significand. Which gives the sum and the carry.
 - Stage 5 : Normalization : The sum is shifted left such that the MSB is equal to 1 and the exponent is reduced by the number of shifts. Based on the rounding formula the result is rounded by either truncation or adding a 1. The output sign appended with the exponent and the mantissa give the final result.
 
-### Results 
-![Adder_Waveform](image.png)
-
 ### Reference 
-"Hardware Realization of High-Speed Area Efficient Floating Point Arithematic Unit on FPGA"
