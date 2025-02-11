@@ -39,6 +39,11 @@ architecture RTL of fp_mul is
     signal unnorm_exponent_stage : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
     signal product : std_ulogic_vector(2*(MANT_WIDTH + 1) - 1 downto 0) := (others => '0'); -- 2 x (m+1) bits
     -- NORMALIZATION 
+    signal temp_significand_product_signal : std_ulogic_vector(MANT_WIDTH downto 0);
+    signal norm_exponent_var_signal : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
+    signal norm_significand_signal : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others => '0');
+    signal significand_product_signal : std_ulogic_vector(MANT_WIDTH downto 0) := (others => '0');
+    signal norm_exponent_signal : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
     signal result : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
 
     begin 
@@ -150,7 +155,7 @@ architecture RTL of fp_mul is
                     if (r = '0') then 
                         k(0) := '0';
                     else 
-                        k(1) := '1';
+                        k(0) := '1';
                     end if;
                     if((significand_product = all_one) and (r = '1')) then 
                         norm_significand := (others => '0');
@@ -162,6 +167,11 @@ architecture RTL of fp_mul is
                         norm_significand := temp_significand_product(temp_significand_product'high-1 downto 0);
                         norm_exponent := norm_exponent_var;
                     end if;
+                    temp_significand_product_signal <=  temp_significand_product;
+                    norm_exponent_var_signal <= norm_exponent_var;
+                    norm_significand_signal <= norm_significand;
+                    significand_product_signal <= significand_product;
+                    norm_exponent_signal <= norm_exponent;
                     result <= output_sign_stage & norm_exponent & norm_significand;
                 end if;
         end process proc_norm;
