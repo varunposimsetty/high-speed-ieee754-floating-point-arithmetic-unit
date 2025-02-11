@@ -30,10 +30,7 @@ architecture RTL of fp_mul is
     signal mantissa_1  : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others => '0');
     signal mantissa_2  : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others => '0');
     -- DENORMALIZATION
-    signal unnorm_exponent_integer : integer := 0;
     signal unnorm_exponent : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
-    signal implicit_1 : std_ulogic := '0';
-    signal implicit_2 : std_ulogic := '0';
     signal significand_1 : std_ulogic_vector(MANT_WIDTH downto 0) := (others => '0');
     signal significand_2 : std_ulogic_vector(MANT_WIDTH downto 0) := (others => '0');
     signal output_sign : std_ulogic := '0';
@@ -42,9 +39,11 @@ architecture RTL of fp_mul is
     signal unnorm_exponent_stage : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
     signal product : std_ulogic_vector(2*(MANT_WIDTH + 1) - 1 downto 0) := (others => '0'); -- 2 x (m+1) bits
     -- NORMALIZATION 
-    signal significand_product : std_ulogic_vector(MANT_WIDTH downto 0) := (others => '0');
-    signal norm_significand : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others => '0');
-    signal norm_exponent : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
+    signal temp_significand_product_signal : std_ulogic_vector(MANT_WIDTH downto 0);
+    signal norm_exponent_var_signal : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
+    signal norm_significand_signal : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others => '0');
+    signal significand_product_signal : std_ulogic_vector(MANT_WIDTH downto 0) := (others => '0');
+    signal norm_exponent_signal : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
     signal result : std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0) := (others => '0');
 
     begin 
@@ -70,17 +69,20 @@ architecture RTL of fp_mul is
 
         -- DENORMALIZATION
         proc_denorm : process(i_clk_100MHz,i_nrst_async) is 
+            variable unnorm_exponent_integer : integer := 0;
+            variable implicit_1 : std_ulogic := '0';
+            variable implicit_2 : std_ulogic := '0';
             begin 
                 if(i_nrst_async = '0') then
-                    unnorm_exponent_integer <= 0;
+                    unnorm_exponent_integer := 0;
                     unnorm_exponent <= (others => '0');
-                    implicit_1 <= '0';
-                    implicit_2 <= '0';
+                    implicit_1 := '0';
+                    implicit_2 := '0';
                     significand_1 <= (others => '0');
                     significand_2 <= (others => '0');
                     output_sign <= '0';
                 elsif(rising_edge(i_clk_100MHz)) then
-                    unnorm_exponent_integer <= to_integer(unsigned(exponent_1)) + to_integer(unsigned(exponent_2)) - BIAS;
+                    unnorm_exponent_integer := to_integer(unsigned(exponent_1)) + to_integer(unsigned(exponent_2)) - BIAS;
                     if (unnorm_exponent_integer <= 0) then 
                         unnorm_exponent <= (others => '0');
                     elsif (unnorm_exponent_integer > 2*BIAS) then
@@ -89,14 +91,14 @@ architecture RTL of fp_mul is
                         unnorm_exponent <= std_ulogic_vector(unsigned(exponent_1) + unsigned(exponent_2) - bias_unsigned);
                     end if;
                     if(to_integer(unsigned(exponent_1)) = 0) then 
-                        implicit_1 <= '0';
+                        implicit_1 := '0';
                     else 
-                        implicit_1 <= '1';
+                        implicit_1 := '1';
                     end if;
                     if(to_integer(unsigned(exponent_2)) = 0) then 
-                        implicit_2 <= '0';
+                        implicit_2 := '0';
                     else 
-                        implicit_2 <= '1';
+                        implicit_2 := '1';
                     end if;
                     significand_1 <= implicit_1 & mantissa_1;
                     significand_2 <= implicit_2 & mantissa_2;
@@ -126,20 +128,23 @@ architecture RTL of fp_mul is
             variable k : unsigned(MANT_WIDTH downto 0) :=  (others => '0') ;
             variable temp_significand_product : std_ulogic_vector(MANT_WIDTH downto 0);
             variable norm_exponent_var : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
+            variable norm_significand : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others => '0');
+            variable significand_product : std_ulogic_vector(MANT_WIDTH downto 0) := (others => '0');
+            variable norm_exponent : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others => '0');
             begin 
                 if(i_nrst_async = '0') then 
                     l := '0';
                     g := '0';
                     s := '0';
                     r := '0';
-                    significand_product <= (others => '0');
-                    norm_exponent <= (others => '0');
-                    norm_significand <= (others => '0');
+                    significand_product := (others => '0');
+                    norm_exponent := (others => '0');
+                    norm_significand := (others => '0');
                     temp_significand_product := (others => '0');
                     norm_exponent_var := (others => '0');
                     result <= (others => '0');
                 elsif(rising_edge(i_clk_100MHz)) then
-                    significand_product <= product(2*(MANT_WIDTH+1)-1 downto MANT_WIDTH + 1);
+                    significand_product := product(2*(MANT_WIDTH+1)-1 downto MANT_WIDTH + 1);
                     l := product((MANT_WIDTH + 2)); -- (m + 2)th bit 
                     g := product((MANT_WIDTH + 1)); -- (m + 1)th bit
                     s := '0';
@@ -150,17 +155,23 @@ architecture RTL of fp_mul is
                     if (r = '0') then 
                         k(0) := '0';
                     else 
-                        k(1) := '1';
+                        k(0) := '1';
                     end if;
                     if((significand_product = all_one) and (r = '1')) then 
-                        norm_significand <= (others => '0');
+                        norm_significand := (others => '0');
                         norm_exponent_var := std_ulogic_vector(unsigned(unnorm_exponent_stage) + k);
-                        norm_exponent <= norm_exponent_var;
+                        norm_exponent := norm_exponent_var;
                     else
+                        norm_exponent_var := unnorm_exponent_stage;
                         temp_significand_product := std_ulogic_vector(unsigned(significand_product) + k);
-                        norm_significand <= temp_significand_product(temp_significand_product'high-1 downto 0);
-                        norm_exponent <= unnorm_exponent_stage;
+                        norm_significand := temp_significand_product(temp_significand_product'high-1 downto 0);
+                        norm_exponent := norm_exponent_var;
                     end if;
+                    temp_significand_product_signal <=  temp_significand_product;
+                    norm_exponent_var_signal <= norm_exponent_var;
+                    norm_significand_signal <= norm_significand;
+                    significand_product_signal <= significand_product;
+                    norm_exponent_signal <= norm_exponent;
                     result <= output_sign_stage & norm_exponent & norm_significand;
                 end if;
         end process proc_norm;

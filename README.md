@@ -30,5 +30,5 @@ Implementation of a high speed IEEE-745 floating point arithematic unit on an FP
 - Stage 2: Denormalization : The exponents of the two numbers are added and the bias is subtracted from the sum. The significand is prepared by appending the mantissa with the implicit bit. The output sign, unnormalized exponent and the significands are determined in this stage.
 - Stage 3 : Significand Multiplication : The two significands are multiplied the product is obtained.
 - Stage 4 : Normalization : The product is taken and the significand portion of it collected i.e. the first (m+1) bits the roudning operation is performed and the round bit is added to the significand_product. The sign bit the exponent and the significand_product are appeneded to obtain the final result.
-
+![Piplined FPU Multiplier]](image.png)
 ### Reference 
