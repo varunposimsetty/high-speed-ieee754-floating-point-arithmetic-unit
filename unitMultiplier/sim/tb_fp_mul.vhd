@@ -15,7 +15,7 @@ architecture bhv of tb is
 
     begin 
 
-    FU_ADDER : entity work.fp_mul(RTL) 
+    FU_MUL : entity work.fp_mul(RTL) 
     port map(
         i_clk_100MHz => clk,
         i_nrst_async => rst,
