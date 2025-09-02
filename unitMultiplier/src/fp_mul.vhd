@@ -42,8 +42,7 @@ architecture RTL of fp_mul is
     constant EXP_ALL_ONES   : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others=>'1');
     constant MANT_ZERO      : std_ulogic_vector(MANT_WIDTH-1 downto 0) := (others=>'0');
     constant ZERO_WORD      : std_ulogic_vector(WORD_WIDTH-1 downto 0) := (others=>'0');
-    constant QNAN_PAYLOAD   : std_ulogic_vector(MANT_WIDTH-1 downto 0)
-        := std_ulogic_vector(shift_left(to_unsigned(1, MANT_WIDTH), MANT_WIDTH-1));
+    constant QNAN_PAYLOAD   : std_ulogic_vector(MANT_WIDTH-1 downto 0):= std_ulogic_vector(shift_left(to_unsigned(1, MANT_WIDTH), MANT_WIDTH-1));
 
     signal s1_sign1, s1_sign2 : std_ulogic := '0';
     signal s1_exp1, s1_exp2   : std_ulogic_vector(EXP_WIDTH-1 downto 0) := (others=>'0');
@@ -65,7 +64,7 @@ architecture RTL of fp_mul is
     signal s3_bypass        : std_ulogic := '0';
     signal s3_bypass_word   : std_ulogic_vector(WORD_WIDTH-1 downto 0) := (others=>'0');
 
-    signal s5_result        : std_ulogic_vector(WORD_WIDTH-1 downto 0) := (others=>'0');
+    signal s4_result        : std_ulogic_vector(WORD_WIDTH-1 downto 0) := (others=>'0');
 begin
     proc_capture: process(i_clk_100MHz, i_nrst_async)
         variable e1,e2: std_ulogic_vector(EXP_WIDTH-1 downto 0);
@@ -181,10 +180,10 @@ begin
         variable need_left : boolean;
     begin
         if i_nrst_async='0' then
-            s5_result <= (others=>'0');
+            s4_result <= (others=>'0');
         elsif rising_edge(i_clk_100MHz) then
             if s3_bypass='1' then
-                s5_result <= s3_bypass_word;
+                s4_result <= s3_bypass_word;
             else
                 prod_u := unsigned(s3_product);
                 exp_t  := s3_exp_field;
@@ -266,10 +265,10 @@ begin
                     outw := sign_o & exp_t & mant;
                 end if;
 
-                s5_result <= outw;
+                s4_result <= outw;
             end if;
         end if;
     end process;
 
-    o_result <= s5_result;
+    o_result <= s4_result;
 end architecture RTL;

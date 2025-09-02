@@ -10,6 +10,10 @@ Implementation of a high speed IEEE-745 floating point arithematic unit on an FP
 - Floating point representation can represent more #'s in the same #'s of bits than a fixed point can represent.
 - Range of #'s in a 32-bit fixed point is := (-32768,32767.9999847412).
 - Range of #'s in a 32-bit floating point is := (1.4 x 10^-45,3.4 x 10^38).
+## TOP MODULE
+- The top module just brings both the adder and multiplier under a single module and allows for both operations to be perfromed independently. 
+- Along with the simulation a basic power analysis is perfromed to estimate the power consumption.
+![Top Module](images/image.png)
 ## Floating Point Adder
 ### Floating Point Adder Stages
 - Preperation -> Denormalization -> Significand Addition -> Normalization.
@@ -21,6 +25,7 @@ Implementation of a high speed IEEE-745 floating point arithematic unit on an FP
 - Stage 4 : Significand Addition : Based on the sign of the two numbers either addition or subtraction is perfromed. In case of subtraction its the addition of the larger significand with the 2's complement of the smaller significand. Which gives the sum and the carry.
 - Stage 5 : Normalization : The sum is shifted left such that the MSB is equal to 1 and the exponent is reduced by the number of shifts. Based on the rounding formula the result is rounded by either truncation or adding a 1. The output sign appended with the exponent and the mantissa give the final result.
 ![Pipelined FPU Adder](image-1.png)
+![alt text](image-2.png)
 ## Floating Point Multiplier 
 ### Floating Point Multiplier Stages 
 - Denormalization -> Significand Multiplication -> Normalization.
@@ -31,5 +36,6 @@ Implementation of a high speed IEEE-745 floating point arithematic unit on an FP
 - Stage 3 : Significand Multiplication : The two significands are multiplied the product is obtained.
 - Stage 4 : Normalization : The product is taken and the significand portion of it collected i.e. the first (m+1) bits the roudning operation is performed and the round bit is added to the significand_product. The sign bit the exponent and the significand_product are appeneded to obtain the final result.
 ![[Piplined FPU Multiplier]](image.png)
+![alt text](image-3.png)
 ### Reference 
 Hardware Realization of High-Speed Area-Efficient Floating Point Arithmetic Unit on FPGA
