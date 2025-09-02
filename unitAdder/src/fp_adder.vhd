@@ -261,6 +261,7 @@ begin
         variable sign_larger, sign_smaller: std_ulogic;
         variable man_larger, man_smaller  : std_ulogic_vector(MANT_WIDTH-1 downto 0);
         variable hidden_larger, hidden_smaller : std_ulogic;
+        variable max_shift : integer;
     begin
         if i_nrst_async='0' then
             s3_large_sig   <= (others=>'0');
@@ -279,6 +280,7 @@ begin
             hidden_smaller := '0'; if exp_smaller /= EXP_ALL_ZERO then hidden_smaller := '1'; end if;
             large_sig_v := hidden_larger  & man_larger  & "000";
             small_sig_v := hidden_smaller & man_smaller & "000";
+            max_shift := to_integer(unsigned(EXP_ALL_ONES));
             -- Right-shift the small significand by the exponent difference
             shift_amt := to_integer(unsigned(s2_exp_diff));
             sticky_v  := '0';
@@ -288,8 +290,10 @@ begin
                 sticky_v    := or_reduce(small_sig_v);
                 small_sig_v := (others=>'0');
             else
-                for i in 0 to shift_amt-1 loop
-                    sticky_v := sticky_v or small_sig_v(i);
+                for i in 0 to (SIG_EXT_WIDTH-1) loop
+                    if(i < shift_amt) then 
+                         sticky_v := sticky_v or small_sig_v(i);
+                     end if;
                 end loop;
                 small_sig_v := std_ulogic_vector(shift_right(unsigned(small_sig_v), shift_amt));
             end if;
@@ -412,8 +416,10 @@ begin
                             else
                                 sticky2 := '0';
                                 if leftover > 0 then
-                                    for idx in 0 to leftover-1 loop
-                                        sticky2 := sticky2 or tmp(idx);
+                                    for idx in 0 to SIG_EXT_WIDTH-1 loop
+                                        if(idx < leftover) then
+                                            sticky2 := sticky2 or tmp(idx);
+                                         end if;
                                     end loop;
                                     tmp := std_ulogic_vector(shift_right(unsigned(tmp), leftover));
                                 end if;
