@@ -1,43 +1,136 @@
-# high-speed-ieee754-floating-point-arithmetic-unit
-Implementation of a high speed IEEE-745 floating point arithematic unit.
+# High-Speed IEEE-754 Floating-Point Arithmetic Unit
+Pipelined Adder + Multiplier with a low-power dual-output top. Fully generic (defaults target FP64). RNE rounding. Handles ±0, subnormals, ±∞, NaNs.
+## Overview
 
-## Floating Point Numbers 
-- Floating point represents integers and fractions with a finite precision.
-- IEEE-754 is a standard for representing floating point numbers in computers. 
-- Single Precision := 32 bit representation (1 sign bit, 8 exponent bits, 23 mantissa bits).
-- Double Precison  := 64 bit representation (1 sign bit, 11 exponent bits, 52 mantissa bits).
-- Exponents are always stored in biased notation, as both positive and negative numbers can be represented only using non-negative binary numbers. Using binary noation simplifies comparision allowing floating point numbers to be treated as unsigned integers.
-- Floating point representation can represent more #'s in the same #'s of bits than a fixed point can represent.
-- Range of #'s in a 32-bit fixed point is := (-32768,32767.9999847412).
-- Range of #'s in a 32-bit floating point is := (1.4 x 10^-45,3.4 x 10^38).
-## TOP MODULE
-- The top module just brings both the adder and multiplier under a single module and allows for both operations to be perfromed independently. 
-- Along with the simulation a basic power analysis is perfromed to estimate the power consumption.
-![Top Module](images/image.png)
-## Floating Point Adder
-### Floating Point Adder Stages
-- Preperation -> Denormalization -> Significand Addition -> Normalization.
-- In this project I implemented these stages in a piplined fashion which would increase the throughput.
-### Pipelined Implemenation 
-- Stage 1 : Capture : Caputring the the sign, exponent and the mantissa of the two operands.
-- Stage 2 : Prepration : Comparing the exponents, mantissa's and the signs of both the operands and decide the larger #, smaller # and the exponent difference between the two.
-- Stage 3 : Denormalization : Output sign (determined based on the larger #), the mantissa of the larger number is padded with a 1 at the MSB and with a guard bit, round bit and sticky bit at the LSB side. This would increase the size from MANT_WIDTH  to MANT_WIDTH + 4.The same is done with the smaller numbers mantissa but its shifted right by the difference in the exponents determined in the step 2. 
-- Stage 4 : Significand Addition : Based on the sign of the two numbers either addition or subtraction is perfromed. In case of subtraction its the addition of the larger significand with the 2's complement of the smaller significand. Which gives the sum and the carry.
-- Stage 5 : Normalization : The sum is shifted left such that the MSB is equal to 1 and the exponent is reduced by the number of shifts. Based on the rounding formula the result is rounded by either truncation or adding a 1. The output sign appended with the exponent and the mantissa give the final result.
-![Pipelined FPU Adder](image-1.png)
-![alt text](image-2.png)
-## Floating Point Multiplier 
-### Floating Point Multiplier Stages 
-- Denormalization -> Significand Multiplication -> Normalization.
-- Implemeted this in a pipelined fashion.
-### Pipelined Implementation 
-- Stage 1: Capture : Caputring the the sign, exponent and the mantissa of the two operands.
-- Stage 2: Denormalization : The exponents of the two numbers are added and the bias is subtracted from the sum. The significand is prepared by appending the mantissa with the implicit bit. The output sign, unnormalized exponent and the significands are determined in this stage.
-- Stage 3 : Significand Multiplication : The two significands are multiplied the product is obtained.
-- Stage 4 : Normalization : The product is taken and the significand portion of it collected i.e. the first (m+1) bits the roudning operation is performed and the round bit is added to the significand_product. The sign bit the exponent and the significand_product are appeneded to obtain the final result.
-![[Piplined FPU Multiplier]](image.png)
-![alt text](image-3.png)
-## Hardware Utilization
-![alt text](image-4.png)
-### Reference 
+- Generic format: EXP_WIDTH, MANT_WIDTH, BIAS (e.g., FP64 = 11/52/1023, FP32 = 8/23/127).
+
+- Rounding: Round-to-Nearest, ties-to-even (RNE).
+
+- Special cases: ±0, subnormals, ±∞, NaNs (quiet NaN on invalid ops).
+
+- Throughput: pipelined (Adder = 5 stages, Multiplier = 4 stages).
+
+## Top Module (dual outputs, low power)
+- Two enables and two independent results to avoid unnecessary toggling. Pulse an enable for one clock when operands are stable. Each unit asserts its own valid after its pipeline latency.
+``` bash 
+entity fp_top_dual is
+  generic(
+    EXP_WIDTH  : integer := 11;
+    MANT_WIDTH : integer := 52;
+    BIAS       : integer := 1023;
+    ADD_LAT    : integer := 5;
+    MUL_LAT    : integer := 4
+  );
+  port(
+    i_clk_100MHz : in  std_ulogic;
+    i_nrst_async : in  std_ulogic;
+    i_add_en     : in  std_ulogic;
+    i_mul_en     : in  std_ulogic;
+    i_operand_a  : in  std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0);
+    i_operand_b  : in  std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0);
+    o_add_valid  : out std_ulogic;
+    o_mul_valid  : out std_ulogic;
+    o_add_result : out std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0);
+    o_mul_result : out std_ulogic_vector(1+EXP_WIDTH+MANT_WIDTH-1 downto 0)
+  );
+end;
+```
+## Floating-Point Adder
+
+#### Pipeline
+- 1. Capture / classify (zero, subnormal, inf, NaN).
+
+- 2. Preparation (choose larger/smaller, exp_diff, add/sub, early-outs).
+
+- 3. Denormalization ([hidden | mant | G R S], shift smaller, sticky).
+
+- 4. Significand add/sub (larger ± smaller), detect exact zero.
+
+- 5. Normalize & round (RNE), post-round overflow, pack.
+![Piplined FP Adder](images/image-2.png)
+
+## Floating-Point Multiplier
+
+#### Pipeline
+- 1. Capture / denorm (implicit bits, exponent sum − bias, specials).
+
+- 2. Significand multiply ((MANT_WIDTH+1) × (MANT_WIDTH+1)).
+
+- 3. Normalize (right on top-bit carry, else left-normalize; subnormals).
+
+- 4. Round (RNE) & pack (overflow → ∞).
+
+![Piplined FP Multiplier](images/image-3.png)
+
+## Top Module 
+![Top Module Waveforms](images/image.png)
+
+## Build, Simulate & Power (GHDL + GTKWave + Python)
+This repo includes a one-shot script that:
+
+- compiles and runs the TB with GHDL,
+
+- produces both GHW (for GTKWave) and VCD (for power),
+
+- runs a Python VCD power calculation, and
+
+- opens GTKWave.
+
+### Prerequisites
+- GHDL, GTKWave, Python 3
+## Run
+``` bash 
+./sim/compSim.sh
+```
+## Outputs
+- work/result.ghw – waveform for GTKWave
+
+- work/result.vcd – switching activity for power calculations
+
+- work/power_summary.txt – power summary
+
+## Hardware Utilization 
+- The current design is not optimized for I/O utilization. 
+
+![Hardware Utilization](images/image-4.png)
+
+## Repo Layout 
+``` bash 
+high-speed-ieee754-floating-point-arithmetic-unit/
+├── README.md
+├── .gitignore
+├── images/
+│   ├── image.png
+│   ├── image-2.png
+│   ├── image-3.png
+│   └── image-4.png
+├── unitAdder/
+│   ├── src/
+│   │   └── fp_adder.vhd
+│   └── sim/
+│       ├── tb_fp_adder.vhd
+│       ├── compSim.sh
+│       └── work/              
+├── unitMultiplier/
+│   ├── src/
+│   │   └── fp_mul.vhd
+│   └── sim/
+│       ├── tb_fp_mul.vhd
+│       ├── compSim.sh
+│       └── work/
+├── unitTop/
+│   ├── src/
+│   │   └── Top.vhd             # FPU Top Module  (adder+ multiplier)
+│   └── sim/
+│       ├── tb_top.vhd
+│       ├── compSim.sh
+│       └── work/
+└── sim/                        # (TopModule testbench)
+    ├── tb_top.vhd
+    ├── compSim.sh              # builds adder/mul/top, runs, dumps GHW+VCD, calls power script
+    ├── vcd_automation.py       # Python power calc
+    └── work/
+```
+
+## Reference 
 Hardware Realization of High-Speed Area-Efficient Floating Point Arithmetic Unit on FPGA
