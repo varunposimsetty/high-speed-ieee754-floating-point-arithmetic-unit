@@ -3,3 +3,5 @@
 
 ### simulation outputs
 *.ghw
+*.vcd
+*.saif
